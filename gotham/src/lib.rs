@@ -25,6 +25,7 @@ extern crate linked_hash_map;
 #[macro_use]
 extern crate log;
 extern crate mime;
+extern crate mime_guess;
 extern crate mio;
 extern crate num_cpus;
 extern crate rand;
@@ -35,7 +36,6 @@ extern crate tokio_core;
 extern crate url;
 extern crate uuid;
 
-#[cfg(test)]
 #[macro_use]
 extern crate serde_derive;
 
