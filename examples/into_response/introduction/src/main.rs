@@ -1,6 +1,5 @@
 //! An introduction to the Gotham web framework's `IntoResponse` trait.
 
-extern crate futures;
 extern crate gotham;
 extern crate hyper;
 extern crate mime;
@@ -11,7 +10,7 @@ extern crate serde_json;
 
 use hyper::{Response, StatusCode};
 
-use gotham::http::response::create_response;
+use gotham::helpers::http::response::create_response;
 use gotham::router::Router;
 use gotham::router::builder::*;
 use gotham::state::State;

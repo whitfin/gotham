@@ -1,16 +1,15 @@
 //! Setting a header value for a Gotham web framework response
 
-extern crate futures;
 extern crate gotham;
 #[macro_use]
 extern crate hyper;
 extern crate mime;
 
 use hyper::{Response, StatusCode};
-use gotham::http::response::create_response;
-use gotham::state::State;
+use gotham::helpers::http::response::create_response;
 use gotham::router::Router;
 use gotham::router::builder::*;
+use gotham::state::State;
 
 // Define a custom header via the standard Hyper provided macro
 header! { (GothamHeader, "X-Gotham") => [String] }

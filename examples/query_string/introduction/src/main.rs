@@ -1,7 +1,6 @@
 //! An introduction to extracting query string name/value pairs, in a type safe way, with the
 //! Gotham web framework
 
-extern crate futures;
 extern crate gotham;
 #[macro_use]
 extern crate gotham_derive;
@@ -14,7 +13,7 @@ extern crate serde_json;
 
 use hyper::{Response, StatusCode};
 
-use gotham::http::response::create_response;
+use gotham::helpers::http::response::create_response;
 use gotham::router::Router;
 use gotham::router::builder::*;
 use gotham::state::{FromState, State};

@@ -1,0 +1,19 @@
+[package]
+name = "gotham_middleware_logger"
+version = "0.1.0"
+authors = ["Isaac Whitfield <iw@whitfin.io>"]
+description = "A Gotham Middleware that provides logging of CLF and request times."
+license = "MIT/Apache-2.0"
+homepage = "https://gotham.rs"
+repository = "https://github.com/gotham-rs/gotham"
+readme = "README.md"
+categories = ["web-programming::http-server"]
+keywords = ["http", "async", "web", "gotham", "logging"]
+
+[dependencies]
+chrono = "0.4"
+log = "0.4"
+futures = "0.1"
+gotham = { path = "../../gotham" }
+gotham_derive = { path = "../../gotham_derive" }
+hyper = "0.11"
