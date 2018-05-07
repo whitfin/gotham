@@ -33,13 +33,13 @@ pub struct LoggingMiddleware {
 /// Main implementation for `LoggingMiddleware` to enable various configuration.
 impl LoggingMiddleware {
     /// Creates a new `LoggingMiddleware` using the provided log level.
-    pub fn new(level: Level) -> LoggingMiddleware {
-        LoggingMiddleware::with_duration(level, false)
+    pub fn with_level(level: Level) -> LoggingMiddleware {
+        LoggingMiddleware::with_level_and_duration(level, false)
     }
 
     /// Creates a new `LoggingMiddleware` using the provided log level, with duration
     /// optionally attached to the end of log messages.
-    pub fn with_duration(level: Level, duration: bool) -> LoggingMiddleware {
+    pub fn with_level_and_duration(level: Level, duration: bool) -> LoggingMiddleware {
         LoggingMiddleware { level, duration }
     }
 }
