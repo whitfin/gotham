@@ -6,6 +6,7 @@ members = [
     "misc/borrow_bag",
 
     ## Middleware
+    "middleware/logger",
     "middleware/template",
     "middleware/under_development/diesel",
 
