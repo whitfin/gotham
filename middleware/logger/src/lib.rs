@@ -5,8 +5,6 @@
 extern crate chrono;
 extern crate futures;
 extern crate gotham;
-#[macro_use]
-extern crate gotham_derive;
 extern crate hyper;
 #[macro_use]
 extern crate log;
@@ -15,7 +13,7 @@ extern crate log;
 use chrono::prelude::*;
 use futures::{future, Future};
 use gotham::handler::HandlerFuture;
-use gotham::middleware::Middleware;
+use gotham::middleware::{Middleware, NewMiddleware};
 use gotham::state::{client_addr, FromState, State};
 use hyper::{HttpVersion, Method, Uri, header::ContentLength};
 use log::Level;
@@ -24,7 +22,7 @@ use log::Level;
 ///
 /// We implement `NewMiddleware` here for Gotham to allow us to work with the request
 /// lifecycle correctly. This trait requires `Clone`, so that is also included.
-#[derive(Clone, NewMiddleware)]
+#[derive(Clone)]
 pub struct LoggingMiddleware {
     duration: bool,
     level: Level,
@@ -41,6 +39,15 @@ impl LoggingMiddleware {
     /// optionally attached to the end of log messages.
     pub fn with_level_and_duration(level: Level, duration: bool) -> LoggingMiddleware {
         LoggingMiddleware { level, duration }
+    }
+}
+
+use std::io;
+impl NewMiddleware for LoggingMiddleware {
+    type Instance = LoggingMiddleware;
+
+    fn new_middleware(&self) -> io::Result<Self::Instance> {
+        Ok(LoggingMiddleware { ..*self })
     }
 }
 
