@@ -19,7 +19,6 @@ extern crate chrono;
 #[cfg(windows)]
 extern crate crossbeam;
 extern crate futures;
-#[macro_use]
 extern crate hyper;
 extern crate linked_hash_map;
 #[macro_use]
@@ -43,17 +42,17 @@ pub mod extractor;
 pub mod handler;
 pub mod helpers;
 pub mod middleware;
+mod os;
 pub mod pipeline;
 pub mod router;
 mod service;
 pub mod state;
 pub mod test;
-mod os;
 
 pub use os::current::start_with_num_threads;
 
-use std::net::{SocketAddr, TcpListener, ToSocketAddrs};
 use handler::NewHandler;
+use std::net::{SocketAddr, TcpListener, ToSocketAddrs};
 
 /// Starts a Gotham application, with the default number of threads (equal to the number of CPUs).
 ///
