@@ -8,7 +8,7 @@ use helpers::http::PercentDecoded;
 use router::non_match::RouteNonMatch;
 use router::route::{Delegation, Route};
 use router::tree::regex::ConstrainedSegmentRegex;
-use router::tree::{Path, SegmentMapping, SegmentsProcessed};
+use router::tree::{SegmentMapping, SegmentsProcessed};
 use state::{request_id, State};
 
 /// Indicates the type of segment which is being represented by this Node.
@@ -125,12 +125,9 @@ impl Node {
     pub(super) fn traverse<'r>(
         &'r self,
         req_path_segments: &'r [&PercentDecoded],
-    ) -> Option<(Path<'r>, &Node, SegmentsProcessed, SegmentMapping<'r>)> {
+    ) -> Option<(&Node, SegmentsProcessed, SegmentMapping<'r>)> {
         match self.inner_traverse(req_path_segments, vec![]) {
-            Some((mut path, leaf, c, sm)) => {
-                path.reverse();
-                Some((path, leaf, c, sm))
-            }
+            Some((leaf, c, sm)) => Some((leaf, c, sm)),
             None => None,
         }
     }
@@ -140,7 +137,7 @@ impl Node {
         &'r self,
         req_path_segments: &'r [&PercentDecoded],
         mut consumed_segments: Vec<&'r PercentDecoded>,
-    ) -> Option<(Vec<&Node>, &Node, SegmentsProcessed, SegmentMapping<'r>)> {
+    ) -> Option<(&Node, SegmentsProcessed, SegmentMapping<'r>)> {
         match req_path_segments.split_first() {
             Some((x, xs)) if self.is_delegating(x) || self.is_leaf(x, xs) => {
                 trace!(" found delegating/leaf node `{}`", self.segment);
@@ -151,7 +148,7 @@ impl Node {
                     sm.insert(self.segment(), consumed_segments);
                 };
 
-                Some((vec![self], self, 0, sm))
+                Some((self, 0, sm))
             }
             Some((x, xs)) if self.is_match(x) => {
                 trace!(" found node `{}`", self.segment);
@@ -162,14 +159,13 @@ impl Node {
                     .next();
 
                 match child {
-                    Some((mut path, leaf, sp, mut sm)) => {
+                    Some((leaf, sp, mut sm)) => {
                         if self.segment_type != SegmentType::Static {
                             consumed_segments.push(x);
                             sm.insert(&self.segment, consumed_segments);
-                            path.push(self);
                         }
 
-                        Some((path, leaf, sp + 1, sm))
+                        Some((leaf, sp + 1, sm))
                     }
 
                     // If we're in a Glob consume segment and continue
@@ -183,7 +179,7 @@ impl Node {
                         trace!(" continuing with glob match for segment `{}`", self.segment);
                         consumed_segments.push(x);
                         match self.inner_traverse(xs, consumed_segments) {
-                            Some((nodes, n, sp, sm)) => Some((nodes, n, sp + 1, sm)),
+                            Some((n, sp, sm)) => Some((n, sp + 1, sm)),
                             None => None,
                         }
                     }
